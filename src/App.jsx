@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Titol from './components/titol/Titol';
+import Modal from './components/modal/Modal';
+import DespesesLlista from './components/despesesLlista/DespesesLlista';
 
 function App() {
   const [mostrarDespeses, setMostrarDespeses] = useState(true);
+  const [mostraModal, setMostraModal] = useState(false);
+
+  console.log(mostraModal);
 
   const [despeses, setDespeses] = useState([
     {concepte: "dinar", quantia: 30.55, pagatPer: "Pere", id: 1},
@@ -19,7 +24,10 @@ function App() {
     setDespeses((despesesPrevies)=> {
       return despesesPrevies.filter((despesa) => id !== despesa.id)
     })
+  }
 
+  const handleTancar = () => {
+    setMostraModal(false);
   }
 
   return (
@@ -39,15 +47,15 @@ function App() {
       </div>
       )
       }
-      {mostrarDespeses &&
-        despeses.map((despesa, index)=>(
-          <div key={despesa.id}>
-            <h2>{index + 1} - {despesa.concepte}</h2>
-            <button onClick={() => handleClick(despesa.id)}>Eliminar Despesa</button>
-          </div>
-        )
-      )
-      }
+      {mostrarDespeses && <DespesesLlista despeses={despeses} handleClick={handleClick} />}
+      {mostraModal && <Modal handleTancar = {handleTancar}>
+        <h2>Component Modal</h2>
+        <p>Ara canviarem el contingut</p>
+        <p>Hola</p>
+      </Modal>}
+      <div>
+        <button onClick={() => setMostraModal(true)}>Mostrar Modal</button>
+      </div>
     </div>
   )
 }
