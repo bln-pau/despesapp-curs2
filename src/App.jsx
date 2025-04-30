@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import Titol from './components/titol/Titol';
 import Modal from './components/modal/Modal';
+import DespesaForm from './components/despesaForm/DespesaForm';
 import DespesesLlista from './components/despesesLlista/DespesesLlista';
 
 function App() {
@@ -48,13 +49,11 @@ function App() {
       )
       }
       {mostrarDespeses && <DespesesLlista despeses={despeses} handleClick={handleClick} />}
-      {mostraModal && <Modal handleTancar = {handleTancar}>
-        <h2>Component Modal</h2>
-        <p>Ara canviarem el contingut</p>
-        <p>Hola</p>
+      {mostraModal && <Modal handleTancar = {handleTancar} >
+        <DespesaForm />
       </Modal>}
       <div>
-        <button onClick={() => setMostraModal(true)}>Mostrar Modal</button>
+        <button onClick={() => setMostraModal(true)}>Afegir Despesa</button>
       </div>
     </div>
   )

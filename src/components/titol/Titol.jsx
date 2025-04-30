@@ -3,10 +3,10 @@ import './Titol.css';
 export default function Titol({titol, subtitol}) {
 
   return (
-    <>
-        <h1>{titol}</h1>
+    <div className='titol-component'>
+        <h1 className="titol">{titol}</h1>
         <br />
-        <h2>{subtitol}</h2>
-    </>
+        <h2 className="subtitol">{subtitol}</h2>
+    </div>
   )
 }
