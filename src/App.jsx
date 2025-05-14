@@ -4,6 +4,8 @@ import Titol from './components/titol/Titol';
 import Modal from './components/modal/Modal';
 import DespesaForm from './components/despesaForm/DespesaForm';
 import DespesesLlista from './components/despesesLlista/DespesesLlista';
+import { onGetDespeses } from './firebase/firebase';
+
 
 function App() {
   const [mostrarDespeses, setMostrarDespeses] = useState(true);
@@ -12,11 +14,7 @@ function App() {
 
   console.log(mostraModal);
 
-  const [despeses, setDespeses] = useState([
-    {concepte: "dinar", quantia: 9.55, pagatPer: "Pere", id: 1},
-    {concepte: "sopar", quantia: 7.65, pagatPer: "Toni", id: 2},
-    {concepte: "excursió", quantia: 11.33, pagatPer: "Anna", id: 3}
-  ]);
+  const [despeses, setDespeses] = useState(null);
 
   // useEffect
 
@@ -25,6 +23,18 @@ function App() {
   //console.log(mostrarDespeses);
 
   const subtitol = "React & Firebase!!";
+
+  useEffect(() =>{
+    onGetDespeses((querySnapshot)=>{
+      let resultats = [];
+
+      querySnapshot.forEach((doc)=>{
+        resultats.push({...doc.data(), id: doc.id});
+      });
+
+      setDespeses(resultats);
+    })
+  }, []);
 
   useEffect(() => {
     setDespeses((despesesPrevies) => {
@@ -71,7 +81,7 @@ function App() {
           </div>
         )
       }
-      {mostrarDespeses && <DespesesLlista despeses={despeses} handleClick={handleClick} />}
+      {despeses && <DespesesLlista despeses={despeses} handleClick={handleClick} />}
       {mostraModal && <Modal handleTancar={handleTancar} >
         <DespesaForm afegirDespesa={afegirDespesa} />
       </Modal>}
