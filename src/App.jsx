@@ -32,6 +32,7 @@ function App() {
         resultats.push({...doc.data(), id: doc.id});
       });
 
+      console.log(resultats);
       setDespeses(resultats);
     })
   }, []);
