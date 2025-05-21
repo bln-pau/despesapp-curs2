@@ -4,53 +4,56 @@ import DespesesLlista from '../../components/despesesLlista/DespesesLlista';
 import Modal from '../../components/modal/Modal';
 import DespesaForm from '../../components/despesaForm/DespesaForm';
 
-import { onGetDespeses, deleteDespesa, saveDespesa } from '../../firebase/firebase';
+import { onGetCollection, deleteDespesa, saveDespesa } from '../../firebase/firebase';
+import { useCollection } from '../../hooks/useCollection';
 
 export default function Inici() {
     const [mostraModal, setMostraModal] = useState(false);
-    const [despeses, setDespeses] = useState(null);
+    //const [despeses, setDespeses] = useState(null);
 
-    useEffect(() => {
-        const unsubscribe = onGetDespeses((querySnapshot) => {
-            let resultats = [];
+    const { documents: despeses } = useCollection('despeses');
 
-            querySnapshot.forEach((doc) => {
-                resultats.push({ ...doc.data(), id: doc.id });
-            });
+    // useEffect(() => {
+    //     const unsubscribe = onGetCollection("despeses", (querySnapshot) => {
+    //         let resultats = [];
 
-            console.log(resultats);
-            setDespeses(resultats);
-        });
-        return () => unsubscribe();
-    }, []);
+    //         querySnapshot.forEach((doc) => {
+    //             resultats.push({ ...doc.data(), id: doc.id });
+    //         });
+
+    //         console.log(resultats);
+    //         setDespeses(resultats);
+    //     });
+    //     return () => unsubscribe();
+    // }, []);
 
     const afegirDespesa = (despesa) => {
-        setDespeses((despesesPrevies) => {
+        // setDespeses((despesesPrevies) => {
 
-            saveDespesa(despesa)
-                .then((idDespesa) => {
-                    despesa.id = idDespesa;
+        //     saveDespesa(despesa)
+        //         .then((idDespesa) => {
+        //             despesa.id = idDespesa;
 
-                    if (!despesesPrevies) {
-                        return [despesa];
-                    } else {
-                        return [...despesesPrevies, despesa];
-                    }
-                })
-        }
-        );
-        setMostraModal(false);
+        //             if (!despesesPrevies) {
+        //                 return [despesa];
+        //             } else {
+        //                 return [...despesesPrevies, despesa];
+        //             }
+        //         })
+        // }
+        // );
+        // setMostraModal(false);
     };
 
     const eliminarDespesa = (id) => {
-        setDespeses((despesesPrevies) => {
+        // setDespeses((despesesPrevies) => {
 
-            deleteDespesa(id)
-                .then(() => {
-                    return despesesPrevies.filter((despesa) => id !== despesa.id)
-                })
+        //     deleteDespesa(id)
+        //         .then(() => {
+        //             return despesesPrevies.filter((despesa) => id !== despesa.id)
+        //         })
 
-        })
+        // })
     }
 
     const handleTancar = () => {

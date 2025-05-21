@@ -22,8 +22,11 @@ export const saveDespesa = async (despesa) => {
 export const getDespeses = () => 
   getDocs(collection(db, "despeses"));
 
-export const onGetDespeses = (callback) =>
-  onSnapshot(collection(db, "despeses"), callback);
+export const onGetCollection = (collectionName, callback) =>
+  onSnapshot(collection(db, collectionName), callback);
+
+export const onGetDespesa = (id, callback) =>
+  onSnapshot(doc(db, "despeses", id), callback);
 
 export const deleteDespesa = async (id) => {
   deleteDoc(doc(db, "despeses", id));
