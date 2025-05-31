@@ -28,32 +28,23 @@ export default function Inici() {
     // }, []);
 
     const afegirDespesa = (despesa) => {
-        // setDespeses((despesesPrevies) => {
 
-        //     saveDespesa(despesa)
-        //         .then((idDespesa) => {
-        //             despesa.id = idDespesa;
-
-        //             if (!despesesPrevies) {
-        //                 return [despesa];
-        //             } else {
-        //                 return [...despesesPrevies, despesa];
-        //             }
-        //         })
-        // }
-        // );
-        // setMostraModal(false);
+        saveDespesa(despesa)
+            .then((idDespesa) => {
+                setMostraModal(false);
+            })
+            .catch((error) => {
+                console.error("")
+            }). fi
     };
 
     const eliminarDespesa = (id) => {
-        // setDespeses((despesesPrevies) => {
+        
+        deleteDespesa(id)
+            .then(() => {
+           return despesesPrevies.filter((despesa) => id !== despesa.id)
+        })
 
-        //     deleteDespesa(id)
-        //         .then(() => {
-        //             return despesesPrevies.filter((despesa) => id !== despesa.id)
-        //         })
-
-        // })
     }
 
     const handleTancar = () => {
@@ -63,10 +54,17 @@ export default function Inici() {
     return (
         <div>
             <h1>Inici</h1>
-            {despeses && <DespesesLlista despeses={despeses} eliminarDespesa={eliminarDespesa} />}
-            {mostraModal && <Modal handleTancar={handleTancar} >
-                <DespesaForm afegirDespesa={afegirDespesa} />
-            </Modal>}
+
+            {Array.isArray(despeses) ? (
+                <DespesesLlista despeses={despeses} eliminarDespesa={eliminarDespesa} />
+            ) : (
+                <p>Carregant despeses...</p>
+            )}
+            {mostraModal && 
+                <Modal handleTancar={handleTancar} >
+                    <DespesaForm afegirDespesa={afegirDespesa} />
+                </Modal>}
+
             <div>
                 <button onClick={() => setMostraModal(true)}>Afegir Despesa</button>
             </div>

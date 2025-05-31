@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 #Fitxer de configuració de Firebase
-**config.js
+src/firebase/config.js

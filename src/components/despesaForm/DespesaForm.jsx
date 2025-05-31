@@ -44,6 +44,7 @@ export default function DespesaForm({ afegirDespesa }) {
         <label>
             <span>Pagat per</span>
             <select onChange={(e) => {setPagatPer(e.target.value)}}>
+              <option value="">-- Selecciona qui ha pagat --</option>
               <option value="joan">Joan</option>
               <option value="anna">Anna</option>
               <option value="pere">Pere</option>
