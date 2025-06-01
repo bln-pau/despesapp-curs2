@@ -13,19 +13,14 @@ export default function DespesaForm({ afegirDespesa }) {
     setPagatPer("");
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // {concepte: "dinar", quantia: 30.55, pagatPer: "Pere", id: 1}
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
 
     const despesa = {
       concepte: concepte,
       quantia: quantia,
       pagatPer: pagatPer,
-      id: Math.floor(Math.random() * 1000)
     }
-
-    console.log(despesa);
 
     afegirDespesa(despesa);
     resetForm();
