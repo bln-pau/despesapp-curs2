@@ -2,7 +2,7 @@ import { firebaseConfig } from "./config"
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app"
-import { getFirestore, addDoc, collection, getDocs, onSnapshot, doc, deleteDoc, setDoc} from "firebase/firestore"
+import { getFirestore, addDoc, collection, getDocs, onSnapshot, doc, deleteDoc, setDoc, updateDoc} from "firebase/firestore"
 import { getAuth,createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'; 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -42,6 +42,11 @@ export const onGetDespesa = (id, callback) =>
 
 export const deleteDespesa = async (id) => {
   deleteDoc(doc(db, "despeses", id));
+}
+
+export const updateDespesa = async (id, dades) => {
+  const ref = doc(db, "despeses", id);
+  await updateDoc(ref, dades);
 }
 
 /* Auth functions */

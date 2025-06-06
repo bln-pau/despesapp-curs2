@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './DespesaForm.css'
 
-export default function DespesaForm({ afegirDespesa, participants }) {
+export default function DespesaForm({ afegirDespesa, participants, despesaInicial }) {
 
   const [concepte, setConcepte] = useState("");
   const [quantia, setQuantia] = useState("");
@@ -12,7 +12,22 @@ export default function DespesaForm({ afegirDespesa, participants }) {
     setConcepte("");
     setQuantia("");
     setPagatPer("");
+    setDividirEntre(participants);
   }
+
+  useEffect(() => {
+    if (despesaInicial) {
+      setConcepte(despesaInicial.concepte || "");
+      setQuantia(despesaInicial.quantia || "");
+      setPagatPer(despesaInicial.pagatPer || "");
+      setDividirEntre(despesaInicial.dividirEntre || []);
+    } else {
+      setConcepte("");
+      setQuantia("");
+      setPagatPer("");
+      setDividirEntre(participants);
+    }
+  }, [despesaInicial]);
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
@@ -48,7 +63,7 @@ export default function DespesaForm({ afegirDespesa, participants }) {
         </label>
         <label>
             <span>Pagat per</span>
-            <select onChange={(e) => {setPagatPer(e.target.value)}}>
+            <select value={pagatPer} onChange={(e) => {setPagatPer(e.target.value)}}>
               <option value="">-- Selecciona qui ha pagat --</option>
               {participants.map((p, i) => (
                 <option key={i} value={p}>{p}</option>
