@@ -3,6 +3,7 @@ import { useState } from "react";
 import { saveCollection } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { useCollection } from "../../hooks/useCollection";
+import {auth} from "../../firebase/firebase";
 import estilos from "./ProjecteForm.module.css";
 
 export default function ProjecteForm({ tancar }) {
@@ -73,6 +74,14 @@ export default function ProjecteForm({ tancar }) {
     }
 
     const nomsValids = participants.map(p => p.nom).filter(n => n !== "");
+
+    const user = auth.currentUser;
+    const nomUsuari = user?.displayName || user?.email || "";
+
+    if (nomUsuari && !nomsValids.includes(nomUsuari)) {
+      nomsValids.unshift(nomUsuari);
+    }
+
     if (nomsValids.length === 0) {
       setError("Has d'afegir almenys un participant.");
       return;

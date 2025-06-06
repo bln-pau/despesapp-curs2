@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCollection } from "../../hooks/useCollection";
 import { deleteProjecte, updateProjecte } from "../../firebase/firebase";
 import estilos from './Projectes.module.css';
@@ -35,7 +35,6 @@ export default function Projectes() {
 
         try {
             await updateProjecte(projecteEditant.id, projecteActualitzat);
-            setParticipantEditant(null);
             setTitolEdicio("");
         } catch (err) {
             setError("No s'ha pogut actualitzar el projecte.");
@@ -52,10 +51,6 @@ export default function Projectes() {
         }
     }
 
-    
-
-    
-
   return (
     <div className={estilos.container}>
         <h1>Projectes</h1>
@@ -63,7 +58,9 @@ export default function Projectes() {
         <ul className={estilos.llista}>
             {projectes && projectes.map(projecte => (
                 <li key={projecte.id} className={estilos.elementLlista}>
-                    <strong>{projecte.titol}</strong> ({projecte.participants.length} participants)
+                    <Link to={`/projecte/${projecte.id}`}>
+                        <strong>{projecte.titol}</strong> 
+                    </Link> ({projecte.participants.length} participants)
                     <div className={estilos.botons}>
                         <button className={estilos.editar} onClick={() => editarProjecte(projecte)}>Editar</button>
                         <button className={estilos.eliminar} onClick={() => eliminarProjecte(projecte.id)}>Eliminar</button>

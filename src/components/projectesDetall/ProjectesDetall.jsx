@@ -67,7 +67,10 @@ export default function ProjectesDetall({ id }) {
                 </Modal>
             )}
 
-            <button onClick={() => setMostraModal(true)}>Afegir Despesa</button>
+            <button onClick={() => {
+                console.log("Click modal");
+                setMostraModal(true);
+            }}>Afegir Despesa</button>
         </div>
     );
 }

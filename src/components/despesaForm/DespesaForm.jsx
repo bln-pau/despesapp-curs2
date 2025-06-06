@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { auth } from "../../firebase/firebase";
 import './DespesaForm.css'
 
 export default function DespesaForm({ afegirDespesa, participants, despesaInicial }) {
@@ -9,25 +10,31 @@ export default function DespesaForm({ afegirDespesa, participants, despesaInicia
   const [dividirEntre, setDividirEntre] = useState(participants);
 
   const resetForm = () => {
+    const usuari = auth.currentUser;
+    const nomUsuari = usuari?.displayName || usuari?.email || "";
+
     setConcepte("");
     setQuantia("");
-    setPagatPer("");
+    setPagatPer(nomUsuari);
     setDividirEntre(participants);
   }
 
   useEffect(() => {
+    const usuari = auth.currentUser;
+    const nomUsuari = usuari?.displayName || usuari?.email || "";
+
     if (despesaInicial) {
       setConcepte(despesaInicial.concepte || "");
       setQuantia(despesaInicial.quantia || "");
-      setPagatPer(despesaInicial.pagatPer || "");
+      setPagatPer(despesaInicial.pagatPer || nomUsuari);
       setDividirEntre(despesaInicial.dividirEntre || []);
     } else {
       setConcepte("");
       setQuantia("");
-      setPagatPer("");
+      setPagatPer(nomUsuari);
       setDividirEntre(participants);
     }
-  }, [despesaInicial]);
+  }, [despesaInicial, participants]);
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
