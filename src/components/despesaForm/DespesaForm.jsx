@@ -6,6 +6,7 @@ export default function DespesaForm({ afegirDespesa, participants }) {
   const [concepte, setConcepte] = useState("");
   const [quantia, setQuantia] = useState("");
   const [pagatPer, setPagatPer] = useState("");
+  const [dividirEntre, setDividirEntre] = useState(participants);
 
   const resetForm = () => {
     setConcepte("");
@@ -20,11 +21,20 @@ export default function DespesaForm({ afegirDespesa, participants }) {
       concepte: concepte,
       quantia: quantia,
       pagatPer: pagatPer,
+      dividirEntre: dividirEntre.filter(p => p !== pagatPer)
     }
 
     afegirDespesa(despesa);
     resetForm();
   };
+
+  const toggleParticipant = (nom) => {
+    if (dividirEntre.includes(nom)) {
+      setDividirEntre(dividirEntre.filter(p => p !== nom));
+    } else {
+      setDividirEntre([...dividirEntre, nom]);
+    }
+  }
 
   return (
     <form className='despesa-form' onSubmit={handleSubmit}>
@@ -41,10 +51,21 @@ export default function DespesaForm({ afegirDespesa, participants }) {
             <select onChange={(e) => {setPagatPer(e.target.value)}}>
               <option value="">-- Selecciona qui ha pagat --</option>
               {participants.map((p, i) => (
-                <option key={p} value={p}>{p}</option>
+                <option key={i} value={p}>{p}</option>
               ))}
             </select>
         </label>
+        <fieldset>
+          <legend>Dividir entre: </legend>
+          {participants.filter(p => p !== pagatPer)
+          .map(p => (
+            <label>
+              <input type="checkbox" checked={dividirEntre.includes(p)} 
+              onChange={() => toggleParticipant(p)} />
+              {p}
+            </label>
+          ))}
+        </fieldset>
         <button>Afegir</button>
     </form>
   )
