@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { useCollection } from "../../hooks/useCollection";
-import { saveCollection } from "../../firebase/firebase";
+import { deleteProjecte, saveCollection, updateProjecte } from "../../firebase/firebase";
 import estilos from './Projectes.module.css';
 
 export default function Projectes() {
@@ -12,6 +12,8 @@ export default function Projectes() {
     const [participants, setParticipants] = useState([]);
     const [nouParticipant, setNouParticipant] = useState("");
     const [participantEditant, setParticipantEditant] = useState(null);
+    const [projecteEditant, setProjecteEditant] = useState(null);
+    const [titolEdicio, setTitolEdicio] = useState("");
     const [error, setError] = useState("");
     
     const nav = useNavigate();
@@ -68,6 +70,43 @@ export default function Projectes() {
         setParticipantEditant(null);
     }
 
+    const editarProjecte = (projecte) => {
+        setProjecteEditant(projecte);
+        setTitolEdicio(projecte.titol);
+    };
+
+    const confirmarEdicioProjecte = async () => {
+        if (!titolEdicio.trim()) {
+            setError("El títol no pot estar buit.");
+            return;
+        } 
+
+        const projecteActualitzat = {
+            ...projecteEditant,
+            titol: titolEdicio.trim()
+        };
+
+        try {
+            await updateProjecte(projecteEditant.id, projecteActualitzat);
+            setParticipantEditant(null);
+            setTitolEdicio("");
+        } catch (err) {
+            setError("No s'ha pogut actualitzar el projecte.");
+        }
+    };
+
+    const eliminarProjecte = async (id) => {
+        if (!window.confirm("Segur que vols eliminar aquest projecte?")) return;
+
+        try {
+            await deleteProjecte(id);
+        } catch (err) {
+            setError("No s'ha pogut eliminar el projecte.");
+        }
+    }
+
+    
+
     const handleSubmit = async (ev) => {
         ev.preventDefault();
 
@@ -109,10 +148,14 @@ export default function Projectes() {
     <div className={estilos.container}>
         <h1>Projectes</h1>
 
-        <ul>
+        <ul className={estilos.llista}>
             {projectes && projectes.map(projecte => (
-                <li key={projecte.id}>
+                <li key={projecte.id} className={estilos.elementLlista}>
                     <strong>{projecte.titol}</strong> ({projecte.participants.length} participants)
+                    <div className={estilos.botons}>
+                        <button className={estilos.editar} onClick={() => editarProjecte(projecte)}>Editar</button>
+                        <button className={estilos.eliminar} onClick={() => eliminarProjecte(projecte.id)}>Eliminar</button>
+                    </div>
                 </li>
             ))} 
         </ul>
@@ -155,10 +198,10 @@ export default function Projectes() {
                     </ul>
                 )}
                     
-                <ul className={estilos.llistaParticipants}>
+                <ul className={estilos.llista}>
                     {
                         participants.map(p => (
-                            <li key={p.id}>
+                            <li key={p.id} className={estilos.elementLlista}>
                                 <span>{p.nom}</span>
                                 <div className={estilos.botons}>
                                     <button type="button" className={estilos.editar} onClick={() => iniciarEdicio(p.id)}>Editar</button>
@@ -168,6 +211,19 @@ export default function Projectes() {
                         ))
                     }
                 </ul>
+                
+                
+                {projecteEditant && (
+                    <div>
+                        <h2>Edita projecte</h2>
+                        <label>
+                            Títol:
+                            <input type="text" value={titolEdicio} onChange={(ev) => setTitolEdicio(ev.target.value)} />
+                        </label>
+                        <button onClick={confirmarEdicioProjecte}>Desar canvis</button>
+                        <button onClick={() => setProjecteEditant(null)}>Cancel·lar</button>
+                    </div>
+                )}
             </div>
 
             {error && <p className={estilos.error}>{error}</p>}

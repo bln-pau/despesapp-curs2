@@ -39,13 +39,13 @@ button:hover {
   background-color: #005fa3;
 }
 
-.llistaParticipants {
+.llista {
   list-style-type: none;
   padding-left: 0;
   margin-top: 10px;
 }
 
-ul li {
+.elementLlista {
   display: grid;
   grid-template-columns: 1fr auto auto; /* nom | editar | eliminar */
   align-items: center;
@@ -115,3 +115,4 @@ ul li {
 .coincidencies button:hover {
   background-color: #005fa3;
 }
+

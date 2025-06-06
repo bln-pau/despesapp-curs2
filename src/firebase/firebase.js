@@ -41,12 +41,21 @@ export const onGetDespesa = (id, callback) =>
   onSnapshot(doc(db, "despeses", id), callback);
 
 export const deleteDespesa = async (id) => {
-  deleteDoc(doc(db, "despeses", id));
+  await deleteDoc(doc(db, "despeses", id));
 }
 
 export const updateDespesa = async (id, dades) => {
   const ref = doc(db, "despeses", id);
   await updateDoc(ref, dades);
+}
+
+export const updateProjecte = async (id, dades) => {
+  const ref = doc(db, "projectes", id);
+  await updateDoc(ref, dades);
+}
+
+export const deleteProjecte = async (id) => {
+  await deleteDoc(doc(db, "projectes", id));
 }
 
 /* Auth functions */
