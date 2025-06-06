@@ -1,0 +1,117 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+h1, h2, h3 {
+  color: #333;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+input[type="text"] {
+  padding: 6px 10px;
+  margin-top: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  margin-top: 8px;
+  margin-right: 8px;
+  padding: 6px 12px;
+  background-color: #007acc;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+.llistaParticipants {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+ul li {
+  display: grid;
+  grid-template-columns: 1fr auto auto; /* nom | editar | eliminar */
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.participant-nom {
+  word-break: break-word;
+}
+
+.editar {
+  background-color: #ffc107;
+}
+.editar:hover {
+  background-color: #e0a800;
+}
+
+.eliminar {
+  background-color: #dc3545;
+}
+
+.eliminar:hover {
+  background-color: #c82333;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+
+.coincidencies {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 10px;
+  background-color: #eef6ff;
+  border: 1px solid #a6d1ff;
+  border-radius: 4px;
+}
+
+.coincidencies li {
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #d0e6ff;
+}
+
+.coincidencies li:last-child {
+  border-bottom: none;
+}
+
+.coincidencies button {
+  background-color: #007acc;
+  color: white;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.coincidencies button:hover {
+  background-color: #005fa3;
+}
