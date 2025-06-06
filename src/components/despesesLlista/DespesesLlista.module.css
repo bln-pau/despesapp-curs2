@@ -1,8 +1,19 @@
 .targeta {
-    border: 1px solid #eee;
-    box-shadow: 4px 4px 5px rgba(0,0,0,0.05);
-    padding: 10px;
-    max-width: 400px;
-    margin: 20px auto;
-    border-radius: 4px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.targeta h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.targeta button {
+  margin-left: 0.5rem;
 }
