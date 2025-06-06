@@ -7,6 +7,7 @@ import Navbar from './components/navbar/Navbar';
 import DespesesDetall from './components/despesesDetall/DespesesDetall';
 import Projectes from './pages/projectes/Projectes';
 import ProjectesDetall from './pages/projecte/ProjectesDetall';
+import RutaPrivada from './components/rutaPrivada/RutaPrivada';
 
 function App() {
 
@@ -17,9 +18,9 @@ function App() {
           <Route path='/' element={<Inici />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/projectes' element={<Projectes />} /> 
-          <Route path='/projecte/:id' element={<ProjectesDetall />} />
-          <Route path='/despesa/:id' element={<DespesesDetall />} />
+          <Route path='/projectes' element={<RutaPrivada element={<Projectes />} />} /> 
+          <Route path='/projecte/:id' element={<RutaPrivada element={<ProjectesDetall />} />} />
+          <Route path='/despesa/:id' element={<RutaPrivada element={<DespesesDetall />} />} />
           <Route path='*' element={<Navigate to="/" replace />} />
         </Routes>
     </div>
