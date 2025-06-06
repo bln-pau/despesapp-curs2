@@ -1,5 +1,5 @@
 // src/components/projectesForm/ProjecteForm.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { saveCollection } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { useCollection } from "../../hooks/useCollection";
@@ -13,6 +13,18 @@ export default function ProjecteForm({ tancar }) {
   const [nouParticipant, setNouParticipant] = useState("");
   const [participantEditant, setParticipantEditant] = useState(null);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user || !usuaris) return;
+      const usuariTrobat = usuaris.find(u => u.uid === user.uid);
+      const nomUsuari = usuariTrobat?.nom || user.email || "";
+      
+      const jaExisteix = participants.some(p => p.nom === nomUsuari);
+      if (!jaExisteix) {
+        setParticipants(prev => [...prev, { id: Date.now(), nom: nomUsuari }]);
+      }
+    }, [usuaris]);
 
   const nav = useNavigate();
 
@@ -76,7 +88,8 @@ export default function ProjecteForm({ tancar }) {
     const nomsValids = participants.map(p => p.nom).filter(n => n !== "");
 
     const user = auth.currentUser;
-    const nomUsuari = user?.displayName || user?.email || "";
+    const usuariTrobat = usuaris?.find(u => u.uid === user?.uid);
+    const nomUsuari = usuariTrobat?.nom || user?.email || "";
 
     if (nomUsuari && !nomsValids.includes(nomUsuari)) {
       nomsValids.unshift(nomUsuari);

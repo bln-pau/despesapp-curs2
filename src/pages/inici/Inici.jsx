@@ -1,72 +1,65 @@
-import { useState, useEffect } from 'react';
-
-import DespesesLlista from '../../components/despesesLlista/DespesesLlista';
-import Modal from '../../components/modal/Modal';
-import DespesaForm from '../../components/despesaForm/DespesaForm';
-
-import { onGetCollection, deleteDespesa, saveDespesa } from '../../firebase/firebase';
-import { useCollection } from '../../hooks/useCollection';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useCollection } from "../../hooks/useCollection";
+import { deleteProjecte } from "../../firebase/firebase";
+import estilos from './Inici.module.css';
+import ProjecteForm from '../../components/projecteForm/ProjecteForm';
+import Modal from "../../components/modal/Modal";
+import ProjecteEditForm from "../../components/projecteEditForm/ProjecteEditForm";
 
 export default function Inici() {
+    const { documents: projectes } = useCollection('projectes');
+
     const [mostraModal, setMostraModal] = useState(false);
-    //const [despeses, setDespeses] = useState(null);
+    const [projecteEditant, setProjecteEditant] = useState(null);
+    const [error, setError] = useState("");
 
-    const { documents: despeses } = useCollection('despeses');
+    const eliminarProjecte = async (id) => {
+        if (!window.confirm("Segur que vols eliminar aquest projecte?")) return;
 
-    // useEffect(() => {
-    //     const unsubscribe = onGetCollection("despeses", (querySnapshot) => {
-    //         let resultats = [];
-
-    //         querySnapshot.forEach((doc) => {
-    //             resultats.push({ ...doc.data(), id: doc.id });
-    //         });
-
-    //         console.log(resultats);
-    //         setDespeses(resultats);
-    //     });
-    //     return () => unsubscribe();
-    // }, []);
-
-    const afegirDespesa = (despesa) => {
-
-        saveDespesa(despesa)
-            .then((idDespesa) => {
-                setMostraModal(false);
-            })
-            .catch((error) => {
-                console.error("")
-            }). fi
+        try {
+            await deleteProjecte(id);
+        } catch (err) {
+            setError("No s'ha pogut eliminar el projecte.");
+        }
     };
-
-    const eliminarDespesa = (id) => {
-        
-        deleteDespesa(id)
-            .catch((err) => {
-                console.error("Error al eliminar la despesa:", error);
-            });
-    };
-
-    const handleTancar = () => {
-        setMostraModal(false);
-    }
 
     return (
-        <div>
-            <h1>Inici</h1>
+        <div className={estilos.container}>
+            <h1>Llista de projectes</h1>
 
-            {Array.isArray(despeses) ? (
-                <DespesesLlista despeses={despeses} eliminarDespesa={eliminarDespesa} />
-            ) : (
-                <p>Carregant despeses...</p>
+            <ul className={estilos.llista}>
+                {projectes && projectes.map(projecte => (
+                    <li key={projecte.id} className={estilos.elementLlista}>
+                        <Link to={`/projecte/${projecte.id}`}>
+                            <strong>{projecte.titol}</strong> 
+                        </Link> ({projecte.participants.length} participants)
+                        <div className={estilos.botons}>
+                            <button onClick={() => setProjecteEditant(projecte)}>Editar</button>
+                            <button onClick={() => eliminarProjecte(projecte.id)}>Eliminar</button>
+                        </div>
+                    </li>
+                ))} 
+            </ul>
+
+            {mostraModal && (
+                <Modal handleTancar={() => setMostraModal(false)}>
+                    <ProjecteForm tancar={() => setMostraModal(false)} />
+                </Modal>
             )}
-            {mostraModal && 
-                <Modal handleTancar={handleTancar} >
-                    <DespesaForm afegirDespesa={afegirDespesa} />
-                </Modal>}
+                    
+            {projecteEditant && (
+                <Modal handleTancar={() => setProjecteEditant(null)}>
+                    <ProjecteEditForm
+                        projecte={projecteEditant}
+                        tancar={() => setProjecteEditant(null)}
+                        onUpdate={() => {}}
+                    />
+                </Modal>
+            )}
 
-            <div>
-                <button onClick={() => setMostraModal(true)}>Afegir Despesa</button>
-            </div>
+            {error && <p className={estilos.error}>{error}</p>}
+            <button type="button" onClick={() => setMostraModal(true)}>Crear projecte</button>
         </div>
     )
 }

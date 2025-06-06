@@ -27,7 +27,7 @@ export default function Register() {
         }
 
         try {
-            await saveUserProfile(resultat.user.uid, resultat.user.email, nom);
+            await saveUserProfile(resultat.user.uid, nom, resultat.user.email);
             nav('/');
         } catch (err) {
             setError("Error al desar el perfil d'usuari");
