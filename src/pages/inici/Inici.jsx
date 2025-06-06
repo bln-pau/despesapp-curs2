@@ -41,11 +41,10 @@ export default function Inici() {
     const eliminarDespesa = (id) => {
         
         deleteDespesa(id)
-            .then(() => {
-           return despesesPrevies.filter((despesa) => id !== despesa.id)
-        })
-
-    }
+            .catch((err) => {
+                console.error("Error al eliminar la despesa:", error);
+            });
+    };
 
     const handleTancar = () => {
         setMostraModal(false);
