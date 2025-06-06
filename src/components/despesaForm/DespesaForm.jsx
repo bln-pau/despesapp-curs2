@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './DespesaForm.css'
 
-export default function DespesaForm({ afegirDespesa }) {
+export default function DespesaForm({ afegirDespesa, participants }) {
 
   const [concepte, setConcepte] = useState("");
   const [quantia, setQuantia] = useState("");
@@ -40,10 +40,9 @@ export default function DespesaForm({ afegirDespesa }) {
             <span>Pagat per</span>
             <select onChange={(e) => {setPagatPer(e.target.value)}}>
               <option value="">-- Selecciona qui ha pagat --</option>
-              <option value="joan">Joan</option>
-              <option value="anna">Anna</option>
-              <option value="pere">Pere</option>
-              <option value="ines">Inés</option>
+              {participants.map((p, i) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
             </select>
         </label>
         <button>Afegir</button>
