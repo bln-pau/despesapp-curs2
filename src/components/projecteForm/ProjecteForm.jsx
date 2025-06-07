@@ -41,7 +41,7 @@ export default function ProjecteForm({ tancar }) {
     const jaExisteix = participants.some(p => p.nom.toLowerCase() === nom.toLowerCase());
     if (jaExisteix) return;
 
-    setParticipants([...participants, { id: Date.now(), nom }]);
+    setParticipants([...participants, { id: nom, nom }]);
     setNouParticipant("");
   };
 

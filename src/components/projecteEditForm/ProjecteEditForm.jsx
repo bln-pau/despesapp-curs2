@@ -2,6 +2,7 @@ import { useState } from "react";
 import { updateProjecte } from "../../firebase/firebase";
 import { useCollection } from "../../hooks/useCollection";
 import estilos from "./ProjecteEditForm.module.css";
+import GestorParticipants from "../gestorParticipants/GestorParticipants";
 
 export default function ProjecteEditForm({ projecte, tancar, onUpdate }) {
   const { documents: usuaris } = useCollection("usuaris");
@@ -26,7 +27,7 @@ export default function ProjecteEditForm({ projecte, tancar, onUpdate }) {
     const jaExisteix = participants.some(p => p.nom.toLowerCase() === nom.toLowerCase());
     if (jaExisteix) return;
 
-    setParticipants([...participants, { id: Date.now(), nom }]);
+    setParticipants([...participants, { id: nom, nom }]);
     setNouParticipant("");
   };
 
@@ -100,53 +101,7 @@ export default function ProjecteEditForm({ projecte, tancar, onUpdate }) {
         <input type="text" value={titol} onChange={(e) => setTitol(e.target.value)} />
       </label>
 
-      <div>
-        <h3>Participants:</h3>
-        <input
-          type="text"
-          value={nouParticipant}
-          onChange={(e) => {
-            setNouParticipant(e.target.value);
-            setError("");
-          }}
-          placeholder="Nom participant"
-        />
-
-        {participantEditant === null ? (
-          <button type="button" onClick={afegirParticipantNoRegistrat}>Afegir</button>
-        ) : (
-          <button type="button" onClick={confirmarEdicio}>Confirmar edició</button>
-        )}
-
-        {usuaris && nouParticipant.trim() && (
-          <ul className={estilos.coincidencies}>
-            {usuaris
-              .filter(u =>
-                u.nom.toLowerCase().includes(nouParticipant.trim().toLowerCase())
-              )
-              .map(u => (
-                <li key={u.uid}>
-                  Coincidència: {u.nom} ({u.email})
-                  <button type="button" onClick={() => afegirParticipantRegistrat(u.nom)}>
-                    Afegir usuari
-                  </button>
-                </li>
-              ))}
-          </ul>
-        )}
-
-        <ul className={estilos.llista}>
-          {participants.map(p => (
-            <li key={p.id} className={estilos.elementLlista}>
-              <span>{p.nom}</span>
-              <div className={estilos.botons}>
-                <button type="button" className={estilos.editar} onClick={() => iniciarEdicio(p.id)}>Editar</button>
-                <button type="button" className={estilos.eliminar} onClick={() => eliminarParticipant(p.id)}>Eliminar</button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <GestorParticipants participants={participants} setParticipants={setParticipants} usuaris={usuaris} />
 
       {error && <p className={estilos.error}>{error}</p>}
       <button type="submit">Desar canvis</button>

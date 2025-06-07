@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { loginUser } from "../../firebase/firebase"
 import { useNavigate } from "react-router-dom";
+import estilos from './Login.module.css';
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ export default function Login() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={estilos["formulari-login"]} onSubmit={handleSubmit}>
       <h2>Iniciar Sessió</h2>
       <label>
         Correu electrònic:
@@ -33,7 +34,7 @@ export default function Login() {
         Contrasenya:
         <input type="password" onChange={(ev) => setPassword(ev.target.value)} />
       </label>
-      {error && <p style={{color: 'red'}}>{error}</p>}
+      {error && <p className={estilos.error}>{error}</p>}
       <button type="submit">Entrar</button>
     </form>
   )
