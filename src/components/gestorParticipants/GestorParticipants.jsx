@@ -14,20 +14,16 @@ export default function GestorParticipants({ participants, setParticipants, usua
     const nom = nouParticipant.trim();
     if (!nom) return;
 
-    const coincidenciaExacta = usuaris?.some(
-      (u) => u.nom.trim().toLowerCase() === nom.toLowerCase()
-    );
+    const coincidenciaExacta = usuaris?.some(u => u.nom.trim().toLowerCase() === nom.toLowerCase());
     if (coincidenciaExacta) {
       setError("Aquest nom coincideix amb un usuari registrat.");
       return;
     }
 
-    const jaExisteix = participants.some(
-      (p) => p.nom.toLowerCase() === nom.toLowerCase()
-    );
+    const jaExisteix = participants.some(p => p.nom.toLowerCase() === nom.toLowerCase());
     if (jaExisteix) return;
 
-    setParticipants([...participants, { id: nom, nom }]);
+    setParticipants([...participants, { id: Date.now(), nom }]);
     setNouParticipant("");
   };
 
@@ -35,22 +31,20 @@ export default function GestorParticipants({ participants, setParticipants, usua
     const nomNet = nom.trim();
     if (!nomNet) return;
 
-    const jaExisteix = participants.some(
-      (p) => p.nom.toLowerCase() === nomNet.toLowerCase()
-    );
+    const jaExisteix = participants.some(p => p.nom.toLowerCase() === nom.toLowerCase());
     if (jaExisteix) return;
 
-    setParticipants([...participants, { id: nomNet, nom: nomNet }]);
+    setParticipants([...participants, { id: Date.now(), nom: nomNet }]);
     setNouParticipant("");
     setError("");
   };
 
   const eliminarParticipant = (id) => {
-    setParticipants(participants.filter((p) => p.id !== id));
+    setParticipants(participants.filter(p => p.id !== id));
   };
 
   const iniciarEdicio = (id) => {
-    const p = participants.find((p) => p.id === id);
+    const p = participants.find(p => p.id === id);
     if (p) {
       setNouParticipant(p.nom);
       setParticipantEditant(id);
@@ -58,27 +52,9 @@ export default function GestorParticipants({ participants, setParticipants, usua
   };
 
   const confirmarEdicio = () => {
-    const nom = nouParticipant.trim();
-    if (!nom) return;
-
-    const coincidenciaExacta = usuaris?.some(
-      (u) => u.nom.trim().toLowerCase() === nom.toLowerCase()
-    );
-    if (coincidenciaExacta) {
-      setError("Aquest nom coincideix amb un usuari registrat.");
-      return;
-    }
-
-    const jaExisteix = participants.some(
-      (p) => p.nom.toLowerCase() === nom.toLowerCase() && p.id !== participantEditant
-    );
-    if (jaExisteix) return;
-
-    setParticipants(
-      participants.map((p) =>
-        p.id === participantEditant ? { id: nom, nom } : p
-      )
-    );
+    setParticipants(participants.map(p =>
+      p.id === participantEditant ? { ...p, nom: nouParticipant.trim() } : p
+    ));
     setNouParticipant("");
     setParticipantEditant(null);
   };

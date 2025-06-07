@@ -1,136 +1,106 @@
-// src/components/projectesDetall/ProjectesDetall.jsx
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getDocument, updateProjecte } from "../../firebase/firebase";
 import { useCollection } from "../../hooks/useCollection";
-import { useState, useEffect } from "react";
-import { saveDespesa, deleteDespesa, updateDespesa } from "../../firebase/firebase";
-import Modal from "../modal/Modal";
-import DespesaForm from "../despesaForm/DespesaForm";
-import DespesesLlista from "../despesesLlista/DespesesLlista";
-import estilos from './ProjectesDetall.module.css';
-import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
-import { updateProjecte } from "../../firebase/firebase";
+import Titol from "../../components/titol/Titol";
+import GestorParticipants from "../../components/gestorParticipants/GestorParticipants";
+import DespesesLlista from "../../components/despesesLlista/DespesesLlista";
+import DespesaForm from "../../components/despesaForm/DespesaForm";
+import Modal from "../../components/modal/Modal";
+import estilos from "./ProjectesDetall.module.css";
 
-export default function ProjectesDetall({ id }) {
-    const { documents: projectes } = useCollection("projectes");
-    const { documents: despeses } = useCollection("despeses");
+export default function ProjectesDetall() {
+  const { id } = useParams();
+  const { documents: usuaris } = useCollection("usuaris");
+  const [projecte, setProjecte] = useState(null);
+  const [participants, setParticipants] = useState([]);
+  const [titol, setTitol] = useState("");
+  const [editantTitol, setEditantTitol] = useState(false);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-    const [mostraModal, setMostraModal] = useState(false);
-    const [despesaEditant, setDespesaEditant] = useState(null);
-
-    const projecte = projectes?.find(p => p.id === id);
-    const [titol, setTitol] = useState("");
-
-    useEffect(() => {
-        if (projecte) {
-            setTitol(projecte.titol);
-        }
-    }, [projecte]);
-
-    const nav = useNavigate();
-
-    const despesesProjecte = despeses?.filter(d => d.idProjecte === id) || [];
-
-    const usuariLoguejat = auth.currentUser?.displayName || auth.currentUser?.email || "";
-
-    const actualitzarTitol = async () => {
-        const nouTitol = titol.trim();
-
-        // Validacions bàsiques
-        if (!nouTitol || nouTitol === projecte.titol) return;
-
-        // Verificar si ja existeix un projecte amb el mateix títol (ignorant el projecte actual)
-        const titolJaExisteix = projectes.some(
-            (p) => p.id !== projecte.id && p.titol.toLowerCase() === nouTitol.toLowerCase()
-        );
-
-        if (titolJaExisteix) {
-            alert("Ja existeix un projecte amb aquest títol.");
-            return;
-        }
-
-        try {
-            await updateProjecte(projecte.id, { ...projecte, titol: nouTitol });
-            alert("Títol actualitzat correctament");
-        } catch (err) {
-            console.error("Error actualitzant el títol:", err);
-            alert("No s'ha pogut actualitzar el títol.");
-        }
-        };
-
-
-    const guardarDespesa = async (despesa) => {
-        const dades = { ...despesa, idProjecte: id };
-
-        if (despesaEditant) {
-            await updateDespesa(despesaEditant.id, dades);
-        } else {
-            await saveDespesa(dades);
-        }
-
-        setDespesaEditant(null);
-        setMostraModal(false);
+  useEffect(() => {
+    const carregarProjecte = async () => {
+      setLoading(true);
+      const doc = await getDocument("projectes", id);
+      if (doc) {
+        setProjecte(doc);
+        setParticipants(doc.participants.map((nom) => ({ id: crypto.randomUUID(), nom })));
+        setTitol(doc.titol);
+      }
+      setLoading(false);
     };
 
-    const eliminarDespesa = async (idDespesa) => {
-        await deleteDespesa(idDespesa);
+    carregarProjecte();
+  }, [id]);
+
+  const actualitzarTitol = async () => {
+    const nouTitol = titol.trim();
+    if (!nouTitol || nouTitol === projecte.titol) {
+      setEditantTitol(false);
+      return;
+    }
+
+    const projecteActualitzat = {
+      ...projecte,
+      titol: nouTitol,
+      participants: participants.map((p) => p.nom),
     };
 
-    const editarDespesa = (despesa) => {
-        setDespesaEditant(despesa);
-        setMostraModal(true);
-    };
+    await updateProjecte(id, projecteActualitzat);
+    setProjecte(projecteActualitzat);
+    setEditantTitol(false);
+  };
 
-    if (!projecte) return <p>Carregant projecte...</p>;
+  const usuariLoguejat = auth.currentUser?.displayName || auth.currentUser?.email || "";
+  const esPropietari = projecte?.participants.includes(usuariLoguejat);
 
-    return (
-        <div className={estilos.container}>
-            <div className={estilos.titolEditable}>
-                <input
-                    type="text"
-                    value={titol}
-                    onChange={(e) => setTitol(e.target.value)}
-                    className={estilos.inputTitol}
-                />
-                <button onClick={actualitzarTitol}>Desar</button>
-            </div>
-            <div className={estilos.section}>
-                <h2>Participants</h2>
-                <ul className={estilos.llista}>
-                    {projecte.participants
-                        .filter(nom => nom !== usuariLoguejat)
-                        .map((nom, index) => (
-                        <li key={index} className={estilos.elementLlista}>
-                            <span>{nom}</span>
-                            <div className={estilos.botons}>
-                            <button className={estilos.editar}>Editar</button>
-                            <button className={estilos.eliminar}>Eliminar</button>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            
-            <div className={estilos.section}>
-                <h2>Despeses</h2>
-                <DespesesLlista
-                    despeses={despesesProjecte}
-                    editarDespesa={editarDespesa}
-                    eliminarDespesa={eliminarDespesa}
-                />
-            </div>
-            
-            {mostraModal && (
-                <Modal handleTancar={() => setMostraModal(false)}>
-                    <DespesaForm
-                        afegirDespesa={guardarDespesa}
-                        participants={projecte.participants}
-                        despesaInicial={despesaEditant}
-                    />
-                </Modal>
+  if (loading) return <p>Carregant projecte...</p>;
+  if (!projecte) return <p>No s'ha trobat el projecte.</p>;
+
+  return (
+    <div className={estilos.projecteDetall}>
+      <Titol text="Detall del projecte" />
+
+      <div className={estilos.titolProjecte}>
+        {editantTitol ? (
+          <>
+            <input
+              type="text"
+              value={titol}
+              onChange={(e) => setTitol(e.target.value)}
+            />
+            <button onClick={actualitzarTitol}>Desar</button>
+          </>
+        ) : (
+          <>
+            <h2>{titol}</h2>
+            {esPropietari && (
+              <button onClick={() => setEditantTitol(true)}>Editar títol</button>
             )}
+          </>
+        )}
+      </div>
 
-            <button className={estilos.botoAfegir} onClick={() => setMostraModal(true)}>Afegir Despesa</button>
-            <button className={estilos.botoTancar} onClick={() => nav("/projectes")}>Tancar projecte</button>
-        </div>
-    );
+      {esPropietari && (
+        <GestorParticipants
+          participants={participants}
+          setParticipants={setParticipants}
+          usuaris={usuaris}
+        />
+      )}
+
+      <DespesesLlista projecte={projecte} />
+
+      {esPropietari && (
+        <>
+          <button onClick={() => setMostrarModal(true)}>Afegir despesa</button>
+          <Modal mostrar={mostrarModal} tancar={() => setMostrarModal(false)}>
+            <DespesaForm projecte={projecte} tancar={() => setMostrarModal(false)} />
+          </Modal>
+        </>
+      )}
+    </div>
+  );
 }
