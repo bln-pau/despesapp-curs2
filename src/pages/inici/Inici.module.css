@@ -1,0 +1,94 @@
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.llista {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.elementLlista {
+  background-color: #f9fafb;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.2s ease;
+}
+
+.elementLlista:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.elementLlista a {
+  font-weight: 600;
+  color: #1a202c;
+  text-decoration: none;
+}
+
+.botons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editar,
+.eliminar,
+button[type="button"] {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.editar {
+  background-color: #facc15;
+  color: #000;
+}
+.editar:hover {
+  background-color: #eab308;
+}
+
+.eliminar {
+  background-color: #ef4444;
+  color: #fff;
+}
+.eliminar:hover {
+  background-color: #dc2626;
+}
+
+button[type="button"] {
+  background-color: #3b82f6;
+  color: #fff;
+  display: block;
+  margin: 1.5rem auto 0 auto;
+}
+button[type="button"]:hover {
+  background-color: #2563eb;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 1rem;
+}

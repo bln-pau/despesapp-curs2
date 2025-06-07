@@ -1,0 +1,88 @@
+.llista {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.elementLlista {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.botons {
+  display: flex;
+  gap: 6px;
+}
+
+.editar {
+  background-color: #ffc107;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.editar:hover {
+  background-color: #e0a800;
+}
+
+.eliminar {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.eliminar:hover {
+  background-color: #c82333;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.coincidencies {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 10px;
+  background-color: #eef6ff;
+  border: 1px solid #a6d1ff;
+  border-radius: 4px;
+}
+
+.coincidencies li {
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #d0e6ff;
+}
+
+.coincidencies li:last-child {
+  border-bottom: none;
+}
+
+.coincidencies button {
+  background-color: #007acc;
+  color: white;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.coincidencies button:hover {
+  background-color: #005fa3;
+}
