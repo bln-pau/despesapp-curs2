@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { auth } from "../../firebase/firebase";
 import './DespesaForm.css'
 
-export default function DespesaForm({ afegirDespesa, participants, despesaInicial }) {
+export default function DespesaForm({ afegirDespesa, participants = [], despesaInicial }) {
 
   const [concepte, setConcepte] = useState("");
   const [quantia, setQuantia] = useState("");
@@ -34,7 +34,7 @@ export default function DespesaForm({ afegirDespesa, participants, despesaInicia
       setPagatPer(nomUsuari);
       setDividirEntre(participants);
     }
-  }, [despesaInicial, participants]);
+  }, [despesaInicial]);
 
   const handleSubmit = (ev) => {
     ev.preventDefault();

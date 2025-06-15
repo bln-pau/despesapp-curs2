@@ -2,7 +2,7 @@ import { firebaseConfig } from "./config"
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app"
-import { getFirestore, addDoc, collection, getDocs, onSnapshot, doc, deleteDoc, setDoc, updateDoc} from "firebase/firestore"
+import { getFirestore, addDoc, collection, getDocs, onSnapshot, doc, deleteDoc, setDoc, updateDoc, getDoc} from "firebase/firestore"
 import { getAuth,createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'; 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -17,6 +17,13 @@ const auth = getAuth(app);
 export { db, auth};
 
 /* Firestore functions */
+export const getDocument = async (collectionName, id) => {
+  const ref = doc(db, collectionName, id);
+  const snapshot = await getDoc(ref);
+
+  return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
+};
+
 export const saveDespesa = async (despesa) => {
   console.log(despesa);
   const docRef = await addDoc(collection(db, "despeses"), despesa);

@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getDocument, updateProjecte } from "../../firebase/firebase";
 import { useCollection } from "../../hooks/useCollection";
-import { auth } from "../../firebase/firebase";
+import { auth, updateProjecte, getDocument } from "../../firebase/firebase";
 import Titol from "../../components/titol/Titol";
 import GestorParticipants from "../../components/gestorParticipants/GestorParticipants";
 import DespesesLlista from "../../components/despesesLlista/DespesesLlista";
@@ -25,8 +24,17 @@ export default function ProjectesDetall() {
       setLoading(true);
       const doc = await getDocument("projectes", id);
       if (doc) {
-        setProjecte(doc);
-        setParticipants(doc.participants.map((nom) => ({ id: crypto.randomUUID(), nom })));
+        const participantsIni = doc.participants || [];
+        const despeses = doc.despeses || [];
+
+        const projecteComplet = {
+          ...doc,
+          participants: participantsIni,
+          despeses: despeses
+        };
+
+        setProjecte(projecteComplet);
+        setParticipants(participantsIni.map((nom) => ({ id: crypto.randomUUID(), nom })));
         setTitol(doc.titol);
       }
       setLoading(false);
@@ -69,9 +77,10 @@ export default function ProjectesDetall() {
             <input
               type="text"
               value={titol}
+              className={estilos.inputTitol}
               onChange={(e) => setTitol(e.target.value)}
             />
-            <button onClick={actualitzarTitol}>Desar</button>
+            <button className={estilos.editar} onClick={actualitzarTitol}>Desar</button>
           </>
         ) : (
           <>
@@ -91,14 +100,27 @@ export default function ProjectesDetall() {
         />
       )}
 
-      <DespesesLlista projecte={projecte} />
+      <h3>Despeses</h3>
+      <DespesesLlista despeses={projecte.despeses || []} />
 
       {esPropietari && (
         <>
           <button onClick={() => setMostrarModal(true)}>Afegir despesa</button>
-          <Modal mostrar={mostrarModal} tancar={() => setMostrarModal(false)}>
-            <DespesaForm projecte={projecte} tancar={() => setMostrarModal(false)} />
+          {mostrarModal && (
+          <Modal mostrar={mostrarModal} handleTancar={() => setMostrarModal(false)}>
+            <DespesaForm afegirDespesa={(novaDespesa) => {
+                                          const despesesActuals = projecte.despeses || [];
+                                          const actualitzat = { 
+                                            ...projecte,
+                                            despeses: [...despesesActuals, novaDespesa]
+                                          };
+                                          updateProjecte(projecte.id, actualitzat);
+                                          setProjecte(actualitzat);
+                                        }}
+                                        participants={participants.map(p => p.nom)}
+                                        tancar={() => setMostrarModal(false)} />
           </Modal>
+          )}
         </>
       )}
     </div>

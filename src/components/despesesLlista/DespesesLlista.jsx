@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import estils from './DespesesLlista.module.css'
 
-export default function DespesesLlista({ despeses, editarDespesa, eliminarDespesa }) {
+export default function DespesesLlista({ despeses = [], editarDespesa, eliminarDespesa }) {
     return (
         <div>
             {
@@ -11,8 +11,10 @@ export default function DespesesLlista({ despeses, editarDespesa, eliminarDespes
                         <Link to={`/despesa/${despesa.id}`}>
                         <h2>{index + 1} - {despesa.concepte}</h2>
                         </Link>
-                        <button onClick={() => editarDespesa(despesa)}>Editar</button>
-                        <button onClick={() => eliminarDespesa(despesa.id)}>Eliminar</button>
+                        <div className='estils.botons'>
+                            <button onClick={() => editarDespesa?.(despesa)}>Editar</button>
+                            <button onClick={() => eliminarDespesa?.(despesa.id)}>Eliminar</button>
+                        </div>
                     </div>
                 ))
             }

@@ -55,3 +55,16 @@
   flex: 1;
 }
 
+.projecteDetall {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.titolProjecte {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
